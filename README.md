@@ -1,4 +1,4 @@
-# dbpopulate
+# dbpopulate [![Build Status](https://travis-ci.org/claudetech/dbpopulate.svg?branch=master)](https://travis-ci.org/claudetech/dbpopulate)
 
 CLI tool written in Go to populate an SQL database from JSON or YAML data.
 
