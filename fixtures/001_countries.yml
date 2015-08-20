@@ -1,0 +1,5 @@
+countries:
+  - id: 1
+    name: 'France'
+  - id: 2
+    name: 'Japan'
