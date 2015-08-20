@@ -7,6 +7,7 @@ import (
 
 	"github.com/claudetech/loggo"
 	"github.com/codegangsta/cli"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func showErrorAndAbort(mesasge string) {
@@ -70,9 +71,10 @@ func main() {
 	app.Action = RunApp
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:  "fixtures-path, p",
-			Value: "./fixtures",
-			Usage: "Set the directory containing the fixtures",
+			Name:   "fixtures-path, p",
+			Value:  "./fixtures",
+			Usage:  "Set the directory containing the fixtures",
+			EnvVar: "FIXTURES_PATH",
 		},
 		cli.StringFlag{
 			Name:   "db-url, u",
@@ -90,8 +92,9 @@ func main() {
 			EnvVar: "DEBUG",
 		},
 		cli.BoolFlag{
-			Name:  "quiet, q",
-			Usage: "Disable info log",
+			Name:   "quiet, q",
+			Usage:  "Disable info log",
+			EnvVar: "QUIET",
 		},
 	}
 	app.Run(os.Args)
