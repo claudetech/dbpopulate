@@ -85,7 +85,7 @@ The available CLI options (and there environment variable equivalent) are:
 * `--fixtures-path` (`-p`, `$FIXTURES_PATH`): Path to the directory containing fixtures
 * `--env` (`-e`, `$GO_ENV`): Environment (used to look for subdirectories)
 * `--debug` (`-d`, `$DEBUG`): Activate debug mode (more log)
-* `--quite` (`-q`, `$QUITE`): Activate quite mode (less log)
+* `--quiet` (`-q`, `$QUIET`): Activate quiet mode (less log)
 
 dbpopulate uses [dotenv](https://github.com/joho/godotenv) to load environment variables, so you can put a `.env` file at the top of your project with the needed settings and use the `dbpopulate` command without any options.
 
