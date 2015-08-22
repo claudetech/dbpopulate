@@ -20,12 +20,27 @@ $ dbpopulate --quiet --database-url=postgres://localhost/foobar?sslmode=disable
 $ dbpopulate --database-url=mysql://foobar:password@tcp(localhost:3306)/foobar --fixtures-path=/path/to/my/fixtures
 ```
 
-## Fixture files
+### CLI options
+
+The available CLI options (with their short form and environment variable equivalents) are:
+
+* `--database-url` (`-u`, `$DATABASE_URL`): Database URL
+* `--fixtures-path` (`-p`, `$FIXTURES_PATH`): Path to the directory containing fixtures
+* `--env` (`-e`, `$GO_ENV`): Environment (used to look for subdirectories)
+* `--debug` (`-d`, `$DEBUG`): Activate debug mode (more log)
+* `--quiet` (`-q`, `$QUIET`): Activate quiet mode (less log)
+
+dbpopulate uses [dotenv](https://github.com/joho/godotenv) to load environment variables, so you can put a `.env` file at the top of your project with the needed settings and use the `dbpopulate` command without any options.
+
+### Fixture files
 
 By default, `dbpopulate` will read all the files ending in `.yml`, `.yaml` or `.json` present in `FIXTURES_PATH` and `FIXTURES_PATH/$GO_ENV` directory. If the latter does not exist, it will be ignored.
 
 `FIXTURES_PATH` defaults to `./fixtures` and can be changed using the `--fixtures-path` option.
 You can change `GO_ENV` by setting the `GO_ENV` environment variable or with the `--env` flag.
+
+`dbpopulate` uses a unique key combination (only the id by default),
+to distinguish the records. Existing records already are not inserted again.
 
 Here is a sample fixture file.
 
@@ -53,7 +68,8 @@ countries:
       - name: 'Japan'
 ```
 
-You can use a single, or multiple keys to distinguish the records.
+You can use a single, or multiple keys to distinguish the records. An error
+will be raised if any of the keys is missing.
 
 Here is an example in JSON:
 
@@ -76,18 +92,6 @@ Here is an example in JSON:
   }]
 }
 ```
-
-## CLI options
-
-The available CLI options (and there environment variable equivalent) are:
-
-* `--database-url` (`-u`, `$DATABASE_URL`): Database URL
-* `--fixtures-path` (`-p`, `$FIXTURES_PATH`): Path to the directory containing fixtures
-* `--env` (`-e`, `$GO_ENV`): Environment (used to look for subdirectories)
-* `--debug` (`-d`, `$DEBUG`): Activate debug mode (more log)
-* `--quiet` (`-q`, `$QUIET`): Activate quiet mode (less log)
-
-dbpopulate uses [dotenv](https://github.com/joho/godotenv) to load environment variables, so you can put a `.env` file at the top of your project with the needed settings and use the `dbpopulate` command without any options.
 
 ## Contributing
 
