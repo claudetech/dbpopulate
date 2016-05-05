@@ -1,8 +1,6 @@
 package main
 
-import (
-	"reflect"
-)
+import "reflect"
 
 func contains(key string, slice []string) bool {
 	for _, v := range slice {
@@ -22,6 +20,17 @@ func extractKeys(data []map[string]interface{}) (res []string) {
 		}
 	}
 	return res
+}
+
+func surroundKeysWithQuotes(keys []string, driver string) []string {
+	quote := `"`
+	if driver == "mysql" {
+		quote = "`"
+	}
+	for i, key := range keys {
+		keys[i] = quote + key + quote
+	}
+	return keys
 }
 
 // from stretchr/testify/assert/assertions

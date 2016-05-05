@@ -87,7 +87,8 @@ func (p *Populator) generateInsertStmt(fixture Fixture, data []map[string]interf
 		args = append(args, recordArgs...)
 	}
 	values := strings.Join(placeholders, ",")
-	return fmt.Sprintf(query, fixture.TableName, strings.Join(keys, ","), values), args
+	keysWithQuotes := surroundKeysWithQuotes(keys, p.Driver)
+	return fmt.Sprintf(query, fixture.TableName, strings.Join(keysWithQuotes, ","), values), args
 }
 
 func (p *Populator) getExistingData(fixture Fixture) ([]map[string]interface{}, error) {
