@@ -3,16 +3,17 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"net/url"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 const (
-	dbFile     = "db/data.sqlite.db"
-	dbUrl      = "sqlite3://" + dbFile
-	schemaFile = "./db/tables.sqlite3.sql"
+	dbURL              = "sqlite3://:memory:"
+	schemaFileTemplate = "./db/tables.%s.sql"
 )
 
 var populator *Populator
@@ -34,18 +35,38 @@ func showErrAndExitTest(err error) {
 }
 
 func TestMain(m *testing.M) {
-	os.Remove(dbFile)
 	var err error
-	if populator, err = NewPopulator(dbUrl); err != nil {
+
+	connectionURL := dbURL
+	if envURL := os.Getenv("DATABASE_URL"); envURL != "" {
+		connectionURL = envURL
+	}
+
+	if populator, err = NewPopulator(connectionURL); err != nil {
 		showErrAndExitTest(err)
 	}
+
+	uri, err := url.Parse(connectionURL)
+	if err != nil {
+		showErrAndExitTest(err)
+	}
+
+	schemaFile := fmt.Sprintf(schemaFileTemplate, uri.Scheme)
 	createTablesStmt, err := ioutil.ReadFile(schemaFile)
 	if err != nil {
 		showErrAndExitTest(err)
 	}
-	if _, err = populator.DB.Exec(string(createTablesStmt)); err != nil {
-		showErrAndExitTest(err)
+
+	statements := strings.Split(string(createTablesStmt), ";")
+	for _, statement := range statements {
+		if strings.TrimSpace(statement) == "" {
+			continue
+		}
+		if _, err = populator.DB.Exec(statement); err != nil {
+			showErrAndExitTest(err)
+		}
 	}
+
 	os.Exit(m.Run())
 }
 

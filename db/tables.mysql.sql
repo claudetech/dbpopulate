@@ -1,8 +1,10 @@
+DROP TABLE IF EXISTS countries;
 CREATE TABLE countries(
   id integer primary key auto_increment,
   name varchar(255)
 );
 
+DROP TABLE IF EXISTS regions;
 CREATE TABLE regions(
   id integer primary key auto_increment,
   name varchar(255),
@@ -11,6 +13,7 @@ CREATE TABLE regions(
 
 CREATE INDEX regions_country_id ON regions (country_id);
 
+DROP TABLE IF EXISTS prefectures;
 CREATE TABLE prefectures(
   id integer primary key auto_increment,
   name varchar(255),
