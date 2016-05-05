@@ -22,15 +22,25 @@ func extractKeys(data []map[string]interface{}) (res []string) {
 	return res
 }
 
-func surroundKeysWithQuotes(keys []string, driver string) []string {
-	quote := `"`
+func quoteForDriver(driver string) string {
 	if driver == "mysql" {
-		quote = "`"
+		return "`"
 	}
+	return `"`
+}
+
+func surroundKeysWithQuotes(keys []string, driver string) []string {
+	res := make([]string, len(keys))
+	quote := quoteForDriver(driver)
 	for i, key := range keys {
-		keys[i] = quote + key + quote
+		res[i] = quote + key + quote
 	}
-	return keys
+	return res
+}
+
+func surroundKeyWithQuote(key, driver string) string {
+	quote := quoteForDriver(driver)
+	return quote + key + quote
 }
 
 // from stretchr/testify/assert/assertions

@@ -79,10 +79,12 @@ Here is an example in JSON:
     "keys": ["name", "country_id"],
     "data": [{
       "country_id": 1,
-      "name": "Ile de france"
+      "name": "Ile de france",
+      "order": 10
     }, {
       "country_id": 2,
-      "name": "Tokyo"
+      "name": "Tokyo",
+      "order": 20
     }]
   },
   "prefectures": [{

@@ -39,7 +39,7 @@ func (p *Populator) generateCondition(keys []string, data map[string]interface{}
 	var args []interface{}
 	for _, key := range keys {
 		if v, ok := data[key]; ok {
-			conditions = append(conditions, fmt.Sprintf("%s=%s", key, p.getPlaceholder()))
+			conditions = append(conditions, fmt.Sprintf("%s=%s", surroundKeyWithQuote(key, p.Driver), p.getPlaceholder()))
 			args = append(args, v)
 		} else {
 			return "", nil, fmt.Errorf("key %s not found in record %v", key, data)
@@ -49,7 +49,8 @@ func (p *Populator) generateCondition(keys []string, data map[string]interface{}
 }
 
 func (p *Populator) generateSelectQuery(fixture Fixture) (string, []interface{}, error) {
-	query := fmt.Sprintf("SELECT %s FROM %s WHERE ", strings.Join(fixture.Keys, ", "), fixture.TableName)
+	quotedKeys := surroundKeysWithQuotes(fixture.Keys, p.Driver)
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE ", strings.Join(quotedKeys, ", "), fixture.TableName)
 	var conditions []string
 	var args []interface{}
 	for _, data := range fixture.Data {
@@ -87,8 +88,8 @@ func (p *Populator) generateInsertStmt(fixture Fixture, data []map[string]interf
 		args = append(args, recordArgs...)
 	}
 	values := strings.Join(placeholders, ",")
-	keysWithQuotes := surroundKeysWithQuotes(keys, p.Driver)
-	return fmt.Sprintf(query, fixture.TableName, strings.Join(keysWithQuotes, ","), values), args
+	quotedKeys := surroundKeysWithQuotes(keys, p.Driver)
+	return fmt.Sprintf(query, fixture.TableName, strings.Join(quotedKeys, ","), values), args
 }
 
 func (p *Populator) getExistingData(fixture Fixture) ([]map[string]interface{}, error) {
