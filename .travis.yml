@@ -18,3 +18,35 @@ env:
   - DB=sqlite3 DATABASE_URL="sqlite3://:memory:"
   - DB=postgres DATABASE_URL="postgres://postgres@localhost/dbpopulate_test?sslmode=disable"
   - DB=mysql DATABASE_URL="mysql://root@tcp(localhost:3306)/dbpopulate_test"
+
+before_deploy:
+  - go get github.com/mitchellh/gox
+  - sed -i -e 's|_ "github.com/mattn/go-sqlite3"|// _ "github.com/mattn/go-sqlite3"|' db.go
+  - gox
+  - sed -i -e 's|// _ "github.com/mattn/go-sqlite3"|_ "github.com/mattn/go-sqlite3"|' db.go
+
+deploy:
+  provider: releases
+  api_key:
+    secure: V6oknOD5kG7bst63WKNKLwmmNSP0ZFTUSkX4kc5UTTilkwpvcHyP8AgrLk0nwi2zjwmF618O7S+0KR4wsLg0VOSaPev/J4OJMTS6CNwUIoKFtkpO2re91lhyjYVaLLpY/hYHm5qwrqEPxcoljKFybKNtsr1br7GwiAAiHtmhk/IrUEhb2mwSZPz2N/57q52s12aNjrrBivLGoQ5Ky/Ndd/tqe+zdK5HvEnCDF+8ysUijXyw3mko2v1gpC7b6vDgtnKmmdFcV7bpfvksy/0098K1Zg1vyQ40n+RqYRQAbLWPMPvvSEzu+9gjcqPSZ5r+t6xXJsY1Lfwk4IrdGtO443tjVJL1Z/aphaQrY9DuB6Gs9xGEly9hN/dqoKYQbyIP3sHzEmUk10crxWzhCkrf1NoFePvL2JDIxQX02eYo77YdMEzxhU1630tj9nG1lvv//WxnCOCSfHjBVHC/JN7QXGwhO1PMqNGbHIqn0KDhRUq+43VQl1xFowfBu6DDafYSCZwOiN9WkRuMDwIWprgAV3LsEs/a5GZ/3SwgNvbcgLa1EjO1pGuOBiq4rnpdwOejSK4mvGZ8MlJ7zYWz4gffXod2J5rmIxsVM3f/Ss1r36zsZHWHX0388X8B0MylSU5m1ONJ/b8WkqT3mWqAkCpZDehlp2GWbCMRnvTCYz6jMHSI=
+  file:
+    - dbpopulate_darwin_386
+    - dbpopulate_darwin_amd64
+    - dbpopulate_freebsd_386
+    - dbpopulate_freebsd_amd64
+    - dbpopulate_freebsd_arm
+    - dbpopulate_linux_386
+    - dbpopulate_linux_amd64
+    - dbpopulate_linux_arm
+    - dbpopulate_netbsd_386
+    - dbpopulate_netbsd_amd64
+    - dbpopulate_netbsd_arm
+    - dbpopulate_openbsd_386
+    - dbpopulate_openbsd_amd64
+    - dbpopulate_windows_386.exe
+    - dbpopulate_windows_amd64.exe
+  on:
+    repo: claudetech/dbpopulate
+    tags: true
+    go: 1.6
+    condition: $DB = postgres
